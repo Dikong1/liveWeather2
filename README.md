@@ -1,6 +1,14 @@
 # Exchange Rate App
 Exchange Rate is a web application that provides real-time weather information. All APIs and URL are set by default. To run application just follow setup instructions
 
+## Technologies Used
+
+- Node.js
+- Express.js
+- ejs
+- CSS
+- MongoDB Atlas
+
 ## Setup and Usage
 1. Clone repository
 2. Install all dependencies
