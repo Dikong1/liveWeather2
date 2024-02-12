@@ -19,6 +19,7 @@ let loginState = {
 }
 
 router
+.route('')
 .get((req, res) => {
     res.redirect('login');
 })
