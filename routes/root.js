@@ -20,7 +20,7 @@ let loginState = {
 
 router
 .get((req, res) => {
-    res.render('login');
+    res.redirect('login');
 })
 
 router
@@ -165,7 +165,7 @@ router
 // ------------------------------------------- APIs---------------------------------
 router
 .route('/exchangeRate')
-.post(async function(req, res) {
+.post(function(req, res) {
     const openExchangeApi = 'cde30c9712e647aaba74f5926869446b';
     const exchangeRateUrl = `https://openexchangerates.org/api/latest.json?app_id=${openExchangeApi}`;
 
