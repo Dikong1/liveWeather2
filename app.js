@@ -14,6 +14,10 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(expressLayouts);
 app.use('/', router);
+app.use('/public/style.css', (req, res, next) => {
+    res.type('text/css');
+    next();
+})
 
 app.listen(3000, function() {
     console.log("Server is running on port http://localhost:3000");

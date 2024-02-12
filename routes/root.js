@@ -10,6 +10,12 @@ mongoose.connect(mongoUrl, {}).then(()=>{
     console.log(e);
 });
 
+let loginState = {
+    isLogged: false,
+    loginName: "",
+    isAdmin: false
+}
+
 router
 .get((req, res) => {
     res.render('login');
@@ -26,14 +32,28 @@ router
         const check = await users.findOne({name: req.body.username});
         if(!check) {
             res.send("Username not found");
+            return;
         }
 
-        if(req.body.username === "admin" & req.body.password === check.password) {
+        if(req.body.username === "Dias" & req.body.password === check.password) {
+            loginState = {
+                isLogged: true,
+                loginName: req.body.username,
+                isAdmin: true
+            }
             res.redirect("admin");
+            return;
         }
 
         if(req.body.password === check.password) {
+            loginState = {
+                isLogged: true,
+                loginName: req.body.username,
+                isAdmin: false
+            }
             res.redirect("home");
+        } else {
+            res.send("Password incorrect!")
         }
     } catch (error) {
         res.send("wrong Details");
@@ -50,7 +70,8 @@ router
 
     const data = {
         name: req.body.username,
-        password: req.body.password
+        password: req.body.password,
+        isAdmin: false
     };
 
     const existingUser = await users.findOne({name: data.name});
@@ -73,6 +94,70 @@ router
 
     res.write("Welocome home");
 
+});
+
+router
+.route('/profile')
+.get((req, res) => {
+    res.render("profile", loginState)
+})
+
+router
+.route('/quit')
+.post((req, res) => {
+    loginState = {
+        isLogged: false,
+        loginName: "",
+        isAdmin: false
+    }
+    res.redirect("profile")
+})
+
+router
+.route('/admin')
+.get((req, res) => {
+    if (loginState.isAdmin) {
+        res.render("admin")
+    } else {
+        res.send("You don`t have admin status, please login as admin")
+    }
+    
+})
+
+router
+.route('/admin/deleteUser')
+.post(async (req, res) => {
+    const check = await users.findOne({name: req.body.delUsername})
+    if (!check) {
+        res.send("User not found");
+        return;
+    }
+    try {
+        await users.deleteOne({name: req.body.delUsername});
+        res.send("User deleted");
+        return;
+    } catch (error) {
+        console.log(error);
+    }
+    
+    res.redirect('back');
+});
+
+router
+.route('/admin/changePassw')
+.post(async (req, res) => {
+    const check = await users.findOne({name: req.body.modUsername})
+    if (!check) {
+        res.send("User not found");
+        return;
+    }
+    try {
+        await users.updateOne({ name: check.name}, {password: req.body.password});
+        res.send("Password changed");
+    } catch (error) {
+        console.log("Error modifying");
+    }
+    
 });
 
 module.exports = router;

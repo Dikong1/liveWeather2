@@ -8,6 +8,18 @@ const loginSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
+    },
+    creationDate: {
+        type: Date,
+        default: Date.now
+    },
+    updateDate: {
+        type: Date,
+        default: Date.now
+    },
+    isAdmin: {
+        type: Boolean,
+        required: true
     }
 });
 
