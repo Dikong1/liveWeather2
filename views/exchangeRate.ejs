@@ -1,0 +1,14 @@
+<h1>Exchange Rate</h1>
+<p>KZT Exchange Rate: <%= exchangeRate %></p>
+
+<!-- <script>
+    function getExchangeRate() {
+      const selectedCurrency = document.getElementById('currency').value;
+      fetch(`/exchangeRate?currency=${selectedCurrency}`)
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('exchangeRate').innerText = `${data.rate} ${selectedCurrency}`;
+        })
+        .catch(error => console.error('Error fetching exchange rate:', error));
+    }
+</script> -->

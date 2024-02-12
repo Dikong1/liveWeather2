@@ -1,11 +1,13 @@
 const express = require('express');
+const https = require('https');
 const mongoose = require('mongoose');
 const { mongoUrl } = require('../config/api');
 const users = require('../models/login-model');
+const currencies = require('../models/currency-model');
 let router = express.Router();
 
 mongoose.connect(mongoUrl, {}).then(()=>{
-    console.log("MongoDB success");
+    console.log("MongoDB success")
 }).catch((e)=>{
     console.log(e);
 });
@@ -158,6 +160,30 @@ router
         console.log("Error modifying");
     }
     
+});
+
+// ------------------------------------------- APIs---------------------------------
+router
+.route('/exchangeRate')
+.post(async function(req, res) {
+    const openExchangeApi = 'cde30c9712e647aaba74f5926869446b';
+    const exchangeRateUrl = `https://openexchangerates.org/api/latest.json?app_id=${openExchangeApi}`;
+
+    https.get(exchangeRateUrl, function(apiRes) {
+        let data = '';
+
+        apiRes.on('data', function(chunk) {
+            data += chunk;
+        });
+
+        apiRes.on('end', function() {
+            const exchangeData = JSON.parse(data);
+            
+            const kztExchangeRate = exchangeData.rates.KZT;
+
+            res.render('exchangeRate', { exchangeRate: kztExchangeRate });
+        });
+    });
 });
 
 module.exports = router;
